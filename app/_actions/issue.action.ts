@@ -46,7 +46,7 @@ export async function getIssues() {
   }
 }
 
-export async function latestIssues() {
+export async function getLatestIssues() {
   try {
     const data = await prisma.issue.findMany({
       orderBy: { createdAt: "desc" },

@@ -5,9 +5,8 @@ import "./globals.css";
 import "@mantine/core/styles.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import NavBar from "./NavBar";
-
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import NavBar from "./components/NavBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
