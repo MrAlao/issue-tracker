@@ -14,10 +14,10 @@ export default async function IssuesPage() {
 
   return (
     <div className="grid lg:grid-cols-7 gap-4">
-      <div className="hidden lg:block col-span-2">
+      <div className="hidden lg:block col-span-3">
         <NewIssue />
       </div>
-      <div className="col-span-full lg:col-span-5">
+      <div className="col-span-full lg:col-span-4">
         <div className="container p-0">
           <Issues issues={issues} />
         </div>

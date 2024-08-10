@@ -45,3 +45,15 @@ export async function getIssues() {
     return null;
   }
 }
+
+export async function latestIssues() {
+  try {
+    const data = await prisma.issue.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    });
+    return data;
+  } catch (error) {
+    return null;
+  }
+}

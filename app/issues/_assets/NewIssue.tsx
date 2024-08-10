@@ -31,6 +31,7 @@ export default function NewIssue() {
           name="description"
           label="Description"
           error={state.errors?.description}
+          rows={4}
           withAsterisk
         />
         <Button.Submit>Create</Button.Submit>
