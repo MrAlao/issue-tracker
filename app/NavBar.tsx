@@ -16,7 +16,7 @@ export default function NavBar() {
 
   return (
     <nav className="flex items-center border-b mb-5">
-      <div className="flex items-center space-x-5 lg:w-4/5 mx-auto p-5">
+      <div className="flex items-center space-x-5 lg:w-4/5 mx-auto py-5 px-0 md:px-0">
         <Link href={"/"}>
           <AiFillBug />
         </Link>
