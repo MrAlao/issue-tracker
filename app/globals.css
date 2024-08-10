@@ -24,6 +24,6 @@ body {
 
 @layer components {
   .container {
-    @apply p-5 border rounded-md h-fit relative overflow-hidden;
+    @apply p-5 border rounded-md h-fit relative overflow-hidden mx-auto;
   }
 }

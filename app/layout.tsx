@@ -24,7 +24,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <MantineProvider>
           <NavBar />
-          <main className="lg:w-4/5 mx-auto">{children}</main>
+          <main className="p-5 lg:p-0 lg:w-4/5 mx-auto">{children}</main>
           <ToastContainer theme="colored" />
         </MantineProvider>
       </body>
