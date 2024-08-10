@@ -4,14 +4,26 @@ import { createIssue } from "@/app/_actions/issue.action";
 import Button from "@/app/components/Button";
 import FormInput from "@/app/components/FormInput";
 import { Textarea } from "@mantine/core";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 import { useFormState } from "react-dom";
+import { toast } from "react-toastify";
 
 export default function NewIssue() {
+  const router = useRouter();
   const [state, action] = useFormState(createIssue, {
     error: false,
     message: "",
   });
+
+  useEffect(() => {
+    if (state.error && state.message) {
+      toast.error(state.message);
+    } else if (state.message) {
+      router.refresh();
+      toast.success(state.message);
+    }
+  }, [state, router]);
 
   return (
     <form action={action} className="container">

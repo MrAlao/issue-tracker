@@ -3,6 +3,7 @@
 import { prisma } from "@/prisma/client";
 import { validation } from "../validation/helper";
 import { newIssueSchema, NewIssueSchema } from "../validation/schema";
+import { revalidatePath } from "next/cache";
 
 export async function createIssue(prevState: unknown, formData: FormData) {
   //await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -16,6 +17,7 @@ export async function createIssue(prevState: unknown, formData: FormData) {
     return {
       error: true,
       errors: result.errors,
+      message: "Correct highlighted fields",
     };
   }
 
@@ -25,6 +27,7 @@ export async function createIssue(prevState: unknown, formData: FormData) {
     });
 
     if (newIssue.id) {
+      revalidatePath("/issues");
       return { error: false, message: "Issue created", data: newIssue };
     } else {
       return { error: true, message: "Unknown error occured" };
