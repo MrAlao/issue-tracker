@@ -7,13 +7,7 @@ import React from "react";
 
 export default function Issues({ issues }: { issues: Issue[] | null }) {
   return (
-    <Table
-      verticalSpacing={"md"}
-      horizontalSpacing={"md"}
-      striped
-      highlightOnHover
-      withTableBorder
-    >
+    <Table horizontalSpacing={"md"} striped highlightOnHover withTableBorder>
       <Table.Thead>
         <Table.Tr>
           <Table.Th>Title</Table.Th>
