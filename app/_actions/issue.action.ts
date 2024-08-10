@@ -36,3 +36,12 @@ export async function createIssue(prevState: unknown, formData: FormData) {
     return { error: true, message: "Something went wrong" };
   }
 }
+
+export async function getIssues() {
+  try {
+    const data = await prisma.issue.findMany();
+    return data;
+  } catch (error) {
+    return null;
+  }
+}
