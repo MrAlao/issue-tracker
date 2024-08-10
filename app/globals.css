@@ -21,3 +21,9 @@ body {
     text-wrap: balance;
   }
 }
+
+@layer components {
+  .container {
+    @apply p-5 border rounded-md;
+  }
+}
