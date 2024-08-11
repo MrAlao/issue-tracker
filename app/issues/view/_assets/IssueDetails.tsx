@@ -1,7 +1,8 @@
+import React from "react";
 import IssueStatus from "@/app/components/IssueStatus";
 import { Card, Flex, Text, Title } from "@mantine/core";
 import { Issue } from "@prisma/client";
-import React from "react";
+import ReactMarkdown from "react-markdown";
 
 interface Props {
   issue: Issue;
@@ -16,7 +17,7 @@ export default function IssueDetails({ issue }: Props) {
         <Text>{issue.createdAt.toDateString()}</Text>
       </Flex>
       <Card withBorder shadow="md" mt={15}>
-        {issue.description}
+        <ReactMarkdown>{issue.description}</ReactMarkdown>
       </Card>
     </>
   );
