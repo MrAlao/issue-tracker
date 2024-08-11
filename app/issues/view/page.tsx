@@ -27,6 +27,6 @@ export async function generateMetadata({ searchParams }: Params) {
 
   return {
     title: issue?.title,
-    description: issue?.description,
+    description: issue?.data?.[0].description,
   };
 }

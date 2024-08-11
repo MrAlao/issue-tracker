@@ -2,7 +2,12 @@
 
 import { prisma } from "@/prisma/client";
 import { validation } from "../validation/helper";
-import { newIssueSchema, NewIssueSchema } from "../validation/schema";
+import {
+  IssueUpdateSchema,
+  issueUpdateSchema,
+  newIssueSchema,
+  NewIssueSchema,
+} from "../validation/schema";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
 
@@ -24,12 +29,47 @@ export async function createIssue(prevState: unknown, formData: FormData) {
 
   try {
     const newIssue = await prisma.issue.create({
-      data: result.formData,
+      data: {
+        title: result.formData.title,
+        data: { create: { description: result.formData.description } },
+      },
     });
 
     if (newIssue.id) {
       revalidatePath("/issues");
       return { error: false, message: "Issue created", data: newIssue };
+    } else {
+      return { error: true, message: "Unknown error occured" };
+    }
+  } catch (error) {
+    return { error: true, message: "Something went wrong" };
+  }
+}
+
+export async function postUpdate(prevState: unknown, formData: FormData) {
+  //await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const result = await validation<IssueUpdateSchema>(
+    issueUpdateSchema,
+    Object.fromEntries(formData)
+  );
+
+  if (result.status !== "success") {
+    return {
+      error: true,
+      errors: result.errors,
+      message: "Correct highlighted fields",
+    };
+  }
+
+  try {
+    const newUpdate = await prisma.issueUpdate.create({
+      data: result.formData,
+    });
+
+    if (newUpdate.id) {
+      revalidatePath("/issues");
+      return { error: false, message: "Issue update posted", data: newUpdate };
     } else {
       return { error: true, message: "Unknown error occured" };
     }
@@ -50,6 +90,7 @@ export async function getIssues(opt?: { status?: string; issue_id?: string }) {
   try {
     const data = await prisma.issue.findMany({
       where,
+      //include: { data: true },
     });
     return data;
   } catch (error) {
@@ -61,6 +102,7 @@ export const getIssue = cache(async ({ issue_id }: { issue_id: string }) => {
   try {
     const data = await prisma.issue.findFirst({
       where: { issue_id },
+      include: { data: { orderBy: { createdAt: "desc" } } },
     });
     return data;
   } catch (error) {

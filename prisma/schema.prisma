@@ -17,14 +17,26 @@ model Issue {
   id          Int      @id @default(autoincrement())
   issue_id    String   @default(uuid())
   title       String   @db.VarChar(255)
-  description String   @db.Text
+  //description String   @db.Text
   status      Status   @default(OPEN)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  data IssueUpdate[]
 }
 
 enum Status {
   OPEN
   IN_PROGRESS
   CLOSED
+}
+
+model IssueUpdate {
+  id          Int      @id @default(autoincrement())
+  issue_id    Int
+  description String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  issue Issue? @relation(fields: [issue_id], references: [id])
 }

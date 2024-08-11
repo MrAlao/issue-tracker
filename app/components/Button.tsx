@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import { Button as BaseButton, ButtonProps, Loader } from "@mantine/core";
 import { useFormStatus } from "react-dom";
+import { BsFillSave2Fill } from "react-icons/bs";
 
 interface Props extends ButtonProps, PropsWithChildren {
   type?: "button" | "submit" | "reset" | undefined;
@@ -19,7 +20,12 @@ Button.Submit = function Submit({ children, ...rest }: Props) {
   const { pending } = useFormStatus();
 
   return (
-    <Button type={"submit"} disabled={pending} {...rest}>
+    <Button
+      type={"submit"}
+      disabled={pending}
+      leftSection={<BsFillSave2Fill />}
+      {...rest}
+    >
       {pending && (
         <div className="absolute flex items-center justify-center inset-0">
           <Loader color="blue" size={"sm"} />

@@ -13,6 +13,12 @@ export default function LatestIssues({ issues }: { issues: Issue[] | null }) {
         Latest Issues
       </Title>
 
+      {issues?.length === 0 && (
+        <Text size="lg" className="text-center" p={20}>
+          No issues created yet.
+        </Text>
+      )}
+
       {issues?.map((item) => (
         <Link
           key={item.id}

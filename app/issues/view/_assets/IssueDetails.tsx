@@ -1,15 +1,19 @@
 import React from "react";
 import IssueStatus from "@/app/components/IssueStatus";
-import { Box, Card, Flex, Text, Title } from "@mantine/core";
-import { Issue } from "@prisma/client";
+import { Box, Card, CardSection, Flex, Text, Title } from "@mantine/core";
 import ReactMarkdown from "react-markdown";
 import DeleteIssue from "./DeleteIssue";
+import PostIssueUpdate from "./PostIssueUpdate";
+import { getIssue } from "@/app/_actions/issue.action";
+import { notFound } from "next/navigation";
 
 interface Props {
-  issue: Issue;
+  issue: Awaited<ReturnType<typeof getIssue>>;
 }
 
 export default function IssueDetails({ issue }: Props) {
+  if (!issue) notFound();
+
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -23,27 +27,17 @@ export default function IssueDetails({ issue }: Props) {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Box className="lg:col-span-2">
-          <Card withBorder shadow="md" mt={15}>
-            <ReactMarkdown>{issue.description}</ReactMarkdown>
-          </Card>
+          {issue.data.map((item) => (
+            <Card withBorder shadow="md" mt={15}>
+              <ReactMarkdown>{item.description}</ReactMarkdown>
+            </Card>
+          ))}
         </Box>
-        <Box mt={15}>
-          <DeleteIssue issue={issue} />
+        <Box mt={15} className="space-y-4">
+          {issue.status !== "CLOSED" && <DeleteIssue issue={issue} />}
+          <PostIssueUpdate issue={issue} />
         </Box>
       </div>
-    </>
-  );
-
-  return (
-    <>
-      <Title>{issue.title}</Title>
-      <Flex className="space-x-3" my="2">
-        <IssueStatus status={issue.status} />
-        <Text>{issue.createdAt.toDateString()}</Text>
-      </Flex>
-      <Card withBorder shadow="md" mt={15}>
-        <ReactMarkdown>{issue.description}</ReactMarkdown>
-      </Card>
     </>
   );
 }

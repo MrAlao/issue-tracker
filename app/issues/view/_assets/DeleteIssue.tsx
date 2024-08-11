@@ -11,7 +11,6 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Issue } from "@prisma/client";
-import IssueStatus from "@/app/components/IssueStatus";
 
 interface Props {
   issue: Issue;

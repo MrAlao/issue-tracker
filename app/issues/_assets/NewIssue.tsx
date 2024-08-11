@@ -4,7 +4,7 @@ import { createIssue } from "@/app/_actions/issue.action";
 import Button from "@/app/components/Button";
 import FormInput from "@/app/components/FormInput";
 import { Text } from "@mantine/core";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 import SimpleMDE from "react-simplemde-editor";
@@ -28,6 +28,10 @@ export default function NewIssue() {
     }
   }, [state]);
 
+  const onChange = useCallback((value: string) => {
+    setDescription(value);
+  }, []);
+
   const onSubmit = (data: FormData) => {
     data.append("description", description);
     action(data);
@@ -48,7 +52,7 @@ export default function NewIssue() {
         /> */}
           <SimpleMDE
             value={description}
-            onChange={setDescription}
+            onChange={onChange}
             placeholder="Issue description..."
             options={{
               maxHeight: "200px",
