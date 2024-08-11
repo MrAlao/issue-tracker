@@ -34,30 +34,32 @@ export default function NewIssue() {
   };
 
   return (
-    <form action={onSubmit} className="container">
-      <h2 className="text-xl fonr-semibold mb-3">Add New</h2>
-      <div className="space-y-4">
-        <FormInput name="title" label="Title" error={state.errors?.title} />
-        {/* <Textarea
+    <>
+      <form action={onSubmit} className="container">
+        <h2 className="text-xl fonr-semibold mb-3">Add New</h2>
+        <div className="space-y-4">
+          <FormInput name="title" label="Title" error={state.errors?.title} />
+          {/* <Textarea
           name="description"
           label="Description"
           error={state.errors?.description}
           rows={4}
           withAsterisk
         /> */}
-        <SimpleMDE
-          value={description}
-          onChange={setDescription}
-          placeholder="Issue description..."
-          options={{
-            maxHeight: "200px",
-          }}
-        />
-        {state.errors?.description && (
-          <Text c={"red"}>{state.errors.description}</Text>
-        )}
-        <Button.Submit>Create</Button.Submit>
-      </div>
-    </form>
+          <SimpleMDE
+            value={description}
+            onChange={setDescription}
+            placeholder="Issue description..."
+            options={{
+              maxHeight: "200px",
+            }}
+          />
+          {state.errors?.description && (
+            <Text c={"red"}>{state.errors.description}</Text>
+          )}
+          <Button.Submit>Create</Button.Submit>
+        </div>
+      </form>
+    </>
   );
 }

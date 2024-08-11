@@ -1,5 +1,5 @@
 import { getIssue } from "@/app/_actions/issue.action";
-import { Box } from "@mantine/core";
+import { Box, Flex } from "@mantine/core";
 import React from "react";
 import IssueDetails from "./_assets/IssueDetails";
 import { notFound } from "next/navigation";
