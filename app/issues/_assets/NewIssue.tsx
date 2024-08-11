@@ -3,16 +3,19 @@
 import { createIssue } from "@/app/_actions/issue.action";
 import Button from "@/app/components/Button";
 import FormInput from "@/app/components/FormInput";
-import { Text } from "@mantine/core";
+import { Box, Modal, Text } from "@mantine/core";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
+import { useDisclosure } from "@mantine/hooks";
+import { FaPlus } from "react-icons/fa";
 
 export default function NewIssue() {
   const router = useRouter();
+  const [opened, { open, close }] = useDisclosure(false);
   const [description, setDescription] = useState("");
   const [state, action] = useFormState(createIssue, {
     error: false,
@@ -39,31 +42,37 @@ export default function NewIssue() {
 
   return (
     <>
-      <form action={onSubmit} className="container">
-        <h2 className="text-xl fonr-semibold mb-3">Add New</h2>
-        <div className="space-y-4">
-          <FormInput name="title" label="Title" error={state.errors?.title} />
-          {/* <Textarea
-          name="description"
-          label="Description"
-          error={state.errors?.description}
-          rows={4}
-          withAsterisk
-        /> */}
-          <SimpleMDE
-            value={description}
-            onChange={onChange}
-            placeholder="Issue description..."
-            options={{
-              maxHeight: "200px",
-            }}
-          />
-          {state.errors?.description && (
-            <Text c={"red"}>{state.errors.description}</Text>
-          )}
-          <Button.Submit>Create</Button.Submit>
-        </div>
-      </form>
+      <Modal
+        opened={opened}
+        onClose={close}
+        withCloseButton={false}
+        size={"xl"}
+        centered
+      >
+        <form action={onSubmit} className="p-5">
+          <h2 className="text-xl fonr-semibold mb-3">Add New</h2>
+          <div className="space-y-4">
+            <FormInput name="title" label="Title" error={state.errors?.title} />
+            <SimpleMDE
+              value={description}
+              onChange={onChange}
+              placeholder="Issue description..."
+              options={{
+                maxHeight: "200px",
+              }}
+            />
+            {state.errors?.description && (
+              <Text c={"red"}>{state.errors.description}</Text>
+            )}
+            <Button.Submit>Create</Button.Submit>
+          </div>
+        </form>
+      </Modal>
+      <Box className="text-right mb-4">
+        <Button onClick={open} leftSection={<FaPlus />}>
+          New Issue
+        </Button>
+      </Box>
     </>
   );
 }

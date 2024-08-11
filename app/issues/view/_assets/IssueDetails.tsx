@@ -1,6 +1,6 @@
 import React from "react";
 import IssueStatus from "@/app/components/IssueStatus";
-import { Box, Card, CardSection, Flex, Text, Title } from "@mantine/core";
+import { Box, Card, Flex, Text, Title } from "@mantine/core";
 import ReactMarkdown from "react-markdown";
 import DeleteIssue from "./DeleteIssue";
 import PostIssueUpdate from "./PostIssueUpdate";

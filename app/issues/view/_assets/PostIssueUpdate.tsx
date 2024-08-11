@@ -55,6 +55,7 @@ export default function PostIssueUpdate({ issue }: Props) {
       >
         <form action={onSubmit}>
           <Box p={20}>
+            <h2 className="text-xl fonr-semibold mb-5">Post Update</h2>
             <SimpleMdeReact
               value={description}
               onChange={onChange}

@@ -3,6 +3,7 @@ import NewIssue from "./_assets/NewIssue";
 import { Metadata } from "next/types";
 import { getIssues } from "../_actions/issue.action";
 import Issues from "./_assets/Issues";
+import IssuesFilter from "./_assets/IssuesFilter";
 
 export const metadata: Metadata = {
   title: "Issues",
@@ -21,13 +22,16 @@ export default async function IssuesPage({ searchParams }: Props) {
   const issues = await getIssues({ status });
 
   return (
-    <div className="grid lg:grid-cols-7 gap-4">
-      <div className="hidden lg:block col-span-3">
-        <NewIssue />
+    <>
+      <NewIssue />
+      <div className="grid grid-cols-1 lg:grid-cols-10">
+        <div className="lg:col-span-2">
+          <IssuesFilter />
+        </div>
+        <div className="lg:col-span-8">
+          <Issues issues={issues} />
+        </div>
       </div>
-      <div className="col-span-full lg:col-span-4">
-        <Issues issues={issues} />
-      </div>
-    </div>
+    </>
   );
 }
