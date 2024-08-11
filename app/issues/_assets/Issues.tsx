@@ -67,7 +67,11 @@ export default function Issues({ issues }: { issues: Issue[] | null }) {
             {issues?.map((item) => {
               return (
                 <Table.Tr key={item.id}>
-                  <Table.Td>{item.title}</Table.Td>
+                  <Table.Td>
+                    <Link href={`/issues/view?issue_id=${item.issue_id}`}>
+                      {item.title}
+                    </Link>
+                  </Table.Td>
                   <Table.Td>
                     <IssueStatus status={item.status} />
                   </Table.Td>

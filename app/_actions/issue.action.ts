@@ -4,6 +4,7 @@ import { prisma } from "@/prisma/client";
 import { validation } from "../validation/helper";
 import { newIssueSchema, NewIssueSchema } from "../validation/schema";
 import { revalidatePath } from "next/cache";
+import { cache } from "react";
 
 export async function createIssue(prevState: unknown, formData: FormData) {
   //await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -37,10 +38,13 @@ export async function createIssue(prevState: unknown, formData: FormData) {
   }
 }
 
-export async function getIssues(opt?: { status?: string }) {
+export async function getIssues(opt?: { status?: string; issue_id?: string }) {
   let where: any = {};
   if (opt?.status) {
     where.status = opt.status;
+  }
+  if (opt?.issue_id) {
+    where.issue_id = opt.issue_id;
   }
 
   try {
@@ -52,6 +56,17 @@ export async function getIssues(opt?: { status?: string }) {
     return null;
   }
 }
+
+export const getIssue = cache(async ({ issue_id }: { issue_id: string }) => {
+  try {
+    const data = await prisma.issue.findFirst({
+      where: { issue_id },
+    });
+    return data;
+  } catch (error) {
+    return null;
+  }
+});
 
 export async function getLatestIssues() {
   try {
