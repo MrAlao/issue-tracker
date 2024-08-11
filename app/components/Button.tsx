@@ -4,6 +4,7 @@ import { useFormStatus } from "react-dom";
 
 interface Props extends ButtonProps, PropsWithChildren {
   type?: "button" | "submit" | "reset" | undefined;
+  onClick?: () => void;
 }
 
 export default function Button({ type = "button", children, ...rest }: Props) {
@@ -14,16 +15,17 @@ export default function Button({ type = "button", children, ...rest }: Props) {
   );
 }
 
-Button.Submit = function Submit({ children }: Props) {
+Button.Submit = function Submit({ children, ...rest }: Props) {
   const { pending } = useFormStatus();
+
   return (
-    <BaseButton type={"submit"} disabled={pending}>
+    <Button type={"submit"} disabled={pending} {...rest}>
       {pending && (
         <div className="absolute flex items-center justify-center inset-0">
           <Loader color="blue" size={"sm"} />
         </div>
       )}
       {children}
-    </BaseButton>
+    </Button>
   );
 };
