@@ -1,16 +1,36 @@
 "use client";
 
 import { useDisclosure } from "@mantine/hooks";
-import { Modal, Flex, Box } from "@mantine/core";
+import { Modal, Flex, Box, Text, Card } from "@mantine/core";
 import { FcDeleteDatabase } from "react-icons/fc";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
 import Button from "@/app/components/Button";
+import { useFormState } from "react-dom";
+import { deleteIssue } from "@/app/_actions/issue.action";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { Issue } from "@prisma/client";
+import IssueStatus from "@/app/components/IssueStatus";
 
 interface Props {
-  issue_id: number;
+  issue: Issue;
 }
 
-export default function DeleteIssue({ issue_id }: Props) {
+export default function DeleteIssue({ issue }: Props) {
+  const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
+  const [state, action] = useFormState(deleteIssue, undefined);
+
+  useEffect(() => {
+    if (state?.error && state.message) {
+      toast.error(state.message);
+    } else if (state?.message) {
+      toast.success(state.message);
+      //router.push("/issues");
+      router.refresh();
+    }
+  }, [state]);
 
   return (
     <>
@@ -18,15 +38,36 @@ export default function DeleteIssue({ issue_id }: Props) {
         <Box p={40} mb={20}>
           <Flex direction={"column"} justify={"center"} align={"center"}>
             <FcDeleteDatabase size={48} />
-            Are you sure you want to delete this issue?
+            <Text>Are you sure you want to delete this issue?</Text>
           </Flex>
+          <form action={() => action({ issue_id: issue.id })}>
+            <Flex justify={"center"} mt={20}>
+              <Button.Submit
+                leftSection={<IoCheckmarkCircleSharp />}
+                color="green"
+              >
+                Continue
+              </Button.Submit>
+            </Flex>
+          </form>
         </Box>
-        <Button.Submit leftSection={<FcDeleteDatabase />} color="red">
-          Yes
-        </Button.Submit>
       </Modal>
 
-      <Button onClick={open}>Delete Issue</Button>
+      <Card
+        onClick={open}
+        withBorder
+        p={30}
+        shadow="md"
+        color="green"
+        role="button"
+        className="!bg-green-100 !text-green-800"
+      >
+        <Text size="xl">Delete Issue?</Text>
+        <Text c="green" mt={10}>
+          Note: This action will change the issue status to 'CLOSED' instead of
+          deleting it permanently.
+        </Text>
+      </Card>
     </>
   );
 }

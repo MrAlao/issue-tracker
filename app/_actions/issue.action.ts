@@ -79,3 +79,33 @@ export async function getLatestIssues() {
     return null;
   }
 }
+
+export async function deleteIssue(
+  prevState: unknown,
+  { issue_id }: { issue_id: number }
+) {
+  try {
+    const res = await prisma.issue.update({
+      where: { id: issue_id },
+      data: {
+        status: "CLOSED",
+      },
+    });
+
+    if (res.id) {
+      return {
+        error: false,
+        message: "Issue status changed",
+      };
+    }
+    return {
+      error: true,
+      message: "Sorry, but you can't change the issue status at the moment",
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: "Something went wrong",
+    };
+  }
+}

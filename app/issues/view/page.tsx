@@ -19,16 +19,7 @@ export default async function IssueView({ searchParams }: Params) {
 
   if (!issue) notFound();
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-3">
-      <Box className="lg:col-span-2">
-        <IssueDetails issue={issue} />
-      </Box>
-      <Box mt={20}>
-        <DeleteIssue issue_id={issue.id} />
-      </Box>
-    </div>
-  );
+  return <IssueDetails issue={issue} />;
 }
 
 export async function generateMetadata({ searchParams }: Params) {
