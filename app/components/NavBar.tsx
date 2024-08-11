@@ -5,6 +5,9 @@ import Link from "next/link";
 import { AiFillBug } from "react-icons/ai";
 import classNames from "classnames";
 import { usePathname } from "next/navigation";
+import { Rajdhani as Font } from "next/font/google";
+
+const font = Font({ weight: "500", subsets: ["latin"] });
 
 export default function NavBar() {
   const currentPath = usePathname();
@@ -15,10 +18,13 @@ export default function NavBar() {
   ];
 
   return (
-    <nav className="flex items-center border-b mb-5">
+    <nav className="flex items-center border-b border-gray-200 dark:border-gray-800 mb-5">
       <div className="flex items-center space-x-5 lg:w-4/5 mx-auto py-5 px-0 md:px-0">
-        <Link href={"/"}>
-          <AiFillBug />
+        <Link href={"/"} className="flex items-center gap-2">
+          <AiFillBug />{" "}
+          <span className={`${font.className} font-semibold text-xl`}>
+            Issue Tracker
+          </span>
         </Link>
         <ul className="flex items-center space-x-5">
           {links.map((link) => (
