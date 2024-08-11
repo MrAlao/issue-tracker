@@ -37,9 +37,16 @@ export async function createIssue(prevState: unknown, formData: FormData) {
   }
 }
 
-export async function getIssues() {
+export async function getIssues(opt?: { status?: string }) {
+  let where: any = {};
+  if (opt?.status) {
+    where.status = opt.status;
+  }
+
   try {
-    const data = await prisma.issue.findMany();
+    const data = await prisma.issue.findMany({
+      where,
+    });
     return data;
   } catch (error) {
     return null;

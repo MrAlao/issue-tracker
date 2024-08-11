@@ -1,8 +1,8 @@
-import { Grid } from "@mantine/core";
 import { Metadata } from "next/types";
 import LatestIssues from "./_assets/LatestIssues";
 import { getIssues, getLatestIssues } from "./_actions/issue.action";
 import IssueSummary from "./_assets/IssueSummary";
+import IssueChart from "./_assets/IssueChart";
 
 export const metadata: Metadata = {
   title: "Issue Tracker",
@@ -22,6 +22,7 @@ export default async function Home() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
       <div>
         <IssueSummary open={open} closed={closed} in_progress={in_progress} />
+        <IssueChart open={open} closed={closed} in_progress={in_progress} />
       </div>
       <div>
         <LatestIssues issues={latestIssues} />

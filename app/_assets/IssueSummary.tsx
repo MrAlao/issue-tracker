@@ -37,7 +37,7 @@ export default function IssueSummary({ open, closed, in_progress }: Props) {
   ];
 
   return (
-    <Grid gutter={10} columns={3}>
+    <Grid columns={3} mb={15}>
       {data.map((item) => (
         <Grid.Col span={1}>
           <Card shadow="sm" padding="lg" radius="md" withBorder>

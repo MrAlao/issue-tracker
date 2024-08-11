@@ -9,8 +9,16 @@ export const metadata: Metadata = {
   description: "",
 };
 
-export default async function IssuesPage() {
-  const issues = await getIssues();
+interface Props {
+  searchParams: {
+    status: string;
+  };
+}
+
+export default async function IssuesPage({ searchParams }: Props) {
+  const status = searchParams.status;
+
+  const issues = await getIssues({ status });
 
   return (
     <div className="grid lg:grid-cols-7 gap-4">
@@ -18,9 +26,7 @@ export default async function IssuesPage() {
         <NewIssue />
       </div>
       <div className="col-span-full lg:col-span-4">
-        <div className="container p-0">
-          <Issues issues={issues} />
-        </div>
+        <Issues issues={issues} />
       </div>
     </div>
   );
