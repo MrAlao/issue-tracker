@@ -32,7 +32,7 @@ export default function PostIssueUpdate({ issue }: Props) {
       toast.success(state.message);
       router.refresh();
     }
-  }, [state]);
+  }, [state, router]);
 
   const onChange = useCallback((value: string) => {
     setDescription(value);

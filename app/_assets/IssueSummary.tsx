@@ -1,6 +1,4 @@
-"use client";
-
-import { Card, Flex, Grid, Text } from "@mantine/core";
+import { Card, Flex, Grid, GridCol, Text } from "@mantine/core";
 import { Status } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
@@ -39,7 +37,7 @@ export default function IssueSummary({ open, closed, in_progress }: Props) {
   return (
     <Grid columns={3} mb={15}>
       {data.map((item) => (
-        <Grid.Col span={1}>
+        <GridCol key={item.value} span={1}>
           <Card shadow="sm" padding="lg" radius="md" withBorder>
             <Link href={`/issues?status=${item.status}`}>
               <Flex direction={"column"}>
@@ -50,7 +48,7 @@ export default function IssueSummary({ open, closed, in_progress }: Props) {
               </Flex>
             </Link>
           </Card>
-        </Grid.Col>
+        </GridCol>
       ))}
     </Grid>
   );

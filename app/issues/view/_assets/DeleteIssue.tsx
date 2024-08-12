@@ -29,7 +29,7 @@ export default function DeleteIssue({ issue }: Props) {
       //router.push("/issues");
       router.refresh();
     }
-  }, [state]);
+  }, [state, router]);
 
   return (
     <>
@@ -63,8 +63,8 @@ export default function DeleteIssue({ issue }: Props) {
       >
         <Text size="xl">Delete Issue?</Text>
         <Text c="green" mt={10}>
-          Note: This action will change the issue status to 'CLOSED' instead of
-          deleting it permanently.
+          Note: This action will change the issue status to &apos;CLOSED&apos;
+          instead of deleting it permanently.
         </Text>
       </Card>
     </>

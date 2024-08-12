@@ -29,7 +29,7 @@ export default function NewIssue() {
       router.push(`/issues/view?issue_id=${state.data?.issue_id}`);
       toast.success(state.message);
     }
-  }, [state]);
+  }, [state, router]);
 
   const onChange = useCallback((value: string) => {
     setDescription(value);

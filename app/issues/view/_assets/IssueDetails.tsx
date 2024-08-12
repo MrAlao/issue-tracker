@@ -28,7 +28,7 @@ export default function IssueDetails({ issue }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Box className="lg:col-span-2">
           {issue.data.map((item) => (
-            <Card withBorder shadow="md" mt={15}>
+            <Card key={item.id} withBorder shadow="md" mt={15}>
               <ReactMarkdown>{item.description}</ReactMarkdown>
             </Card>
           ))}
