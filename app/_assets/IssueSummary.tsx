@@ -37,7 +37,7 @@ export default function IssueSummary({ open, closed, in_progress }: Props) {
   return (
     <Grid columns={3} mb={15}>
       {data.map((item) => (
-        <GridCol key={item.value} span={1}>
+        <GridCol key={item.label} span={1}>
           <Card shadow="sm" padding="lg" radius="md" withBorder>
             <Link href={`/issues?status=${item.status}`}>
               <Flex direction={"column"}>
