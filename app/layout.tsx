@@ -12,6 +12,8 @@ import { AuthProvider } from "./context/Auth.context";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID!;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -23,7 +25,7 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body className={inter.className}>
-        <GoogleOAuthProvider clientId={process.env.GOOGLE_OAUTH_CLIENT_ID!}>
+        <GoogleOAuthProvider clientId={clientId}>
           <MantineProvider>
             <AuthProvider>
               <NavBar />

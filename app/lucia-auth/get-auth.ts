@@ -42,7 +42,7 @@ export async function validateSession() {
   const { user, session } = await getAuth();
 
   if (!session || !user) {
-    return redirect(`/login/?redirectPath=${await getPathname()}`);
+    return redirect(`?redirectPath=${await getPathname()}`);
   }
 
   return { user: { ...user, id: Number(user.id) }, session };

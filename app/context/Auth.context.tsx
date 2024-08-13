@@ -21,8 +21,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     async function checkSession() {
       const res = await fetch("/api/authdata");
-      const data = await res.json();
-      setUser(data);
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data as User);
+      }
       setIsLoading(false);
     }
 
@@ -37,8 +39,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+
+  if (!context) {
     throw new Error("useAuth must be used within a AuthProvider");
   }
+
   return context;
 };

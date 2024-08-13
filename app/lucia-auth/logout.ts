@@ -5,11 +5,11 @@ import { redirect } from "next/navigation";
 import { getAuth, getPathname } from "./get-auth";
 import { lucia } from "./lucia";
 
-export const logOut = async (_formData: FormData) => {
+export const logOut = async () => {
   const { session } = await getAuth();
 
   if (!session) {
-    return redirect(`/login/?redirectPath=${await getPathname()}`);
+    return redirect(`/?redirectPath=${await getPathname()}`);
   }
 
   await lucia.invalidateSession(session.id);
@@ -22,5 +22,5 @@ export const logOut = async (_formData: FormData) => {
     sessionCookie.attributes
   );
 
-  return redirect(`/login/?redirectPath=${await getPathname()}`);
+  //return redirect(`/?redirectPath=${await getPathname()}`);
 };
