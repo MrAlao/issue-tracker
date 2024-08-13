@@ -49,4 +49,14 @@ model User {
   image      String
   createdAt  DateTime @default(now()) @db.DateTime(0)
   updatedAt  DateTime @updatedAt
+
+  seesions Session[]
+}
+
+model Session {
+  id        String   @id @unique
+  userId    Int
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
