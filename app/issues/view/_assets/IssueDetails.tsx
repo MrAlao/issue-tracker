@@ -2,7 +2,7 @@ import React from "react";
 import IssueStatus from "@/app/components/IssueStatus";
 import { Box, Card, Flex, Text, Title } from "@mantine/core";
 import ReactMarkdown from "react-markdown";
-import DeleteIssue from "./DeleteIssue";
+import CloseIssue from "./CloseIssue";
 import PostIssueUpdate from "./PostIssueUpdate";
 import { getIssue } from "@/app/_actions/issue.action";
 import { notFound } from "next/navigation";
@@ -34,7 +34,7 @@ export default function IssueDetails({ issue }: Props) {
           ))}
         </Box>
         <Box mt={15} className="space-y-4">
-          {issue.status !== "CLOSED" && <DeleteIssue issue={issue} />}
+          {issue.status !== "CLOSED" && <CloseIssue issue={issue} />}
           <PostIssueUpdate issue={issue} />
         </Box>
       </div>

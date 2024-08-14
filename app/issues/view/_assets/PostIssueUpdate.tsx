@@ -11,6 +11,7 @@ import { Issue } from "@prisma/client";
 import SimpleMdeReact from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import Button from "@/app/components/Button";
+import { useAuth } from "@/app/context/Auth.context";
 
 interface Props {
   issue: Issue;
@@ -24,6 +25,8 @@ export default function PostIssueUpdate({ issue }: Props) {
     error: false,
     message: "",
   });
+
+  const { user } = useAuth();
 
   useEffect(() => {
     if (state.error && state.message) {
@@ -43,6 +46,17 @@ export default function PostIssueUpdate({ issue }: Props) {
     data.append("description", description);
     action(data);
   };
+
+  if (!user?.id) {
+    return (
+      <Card withBorder p={30} shadow="md" bg={"dimmed"}>
+        <Text size="xl">Got an update?</Text>
+        <Text c="white" mt={10}>
+          Note: This action is only available to authenticated users.
+        </Text>
+      </Card>
+    );
+  }
 
   return (
     <>

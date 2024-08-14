@@ -12,6 +12,7 @@ import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
 import { FaPlus } from "react-icons/fa";
+import { useAuth } from "@/app/context/Auth.context";
 
 export default function NewIssue() {
   const router = useRouter();
@@ -21,6 +22,8 @@ export default function NewIssue() {
     error: false,
     message: "",
   });
+
+  const { user } = useAuth();
 
   useEffect(() => {
     if (state.error && state.message) {
@@ -51,21 +54,32 @@ export default function NewIssue() {
       >
         <form action={onSubmit} className="p-5">
           <h2 className="text-xl fonr-semibold mb-3">Add New</h2>
-          <div className="space-y-4">
-            <FormInput name="title" label="Title" error={state.errors?.title} />
-            <SimpleMDE
-              value={description}
-              onChange={onChange}
-              placeholder="Issue description..."
-              options={{
-                maxHeight: "200px",
-              }}
-            />
-            {state.errors?.description && (
-              <Text c={"red"}>{state.errors.description}</Text>
-            )}
-            <Button.Submit>Create</Button.Submit>
-          </div>
+          {!user?.id && (
+            <Text c={"red"}>
+              Sorry, but only authenticated users can post issues.
+            </Text>
+          )}
+          {user?.id && (
+            <div className="space-y-4">
+              <FormInput
+                name="title"
+                label="Title"
+                error={state.errors?.title}
+              />
+              <SimpleMDE
+                value={description}
+                onChange={onChange}
+                placeholder="Issue description..."
+                options={{
+                  maxHeight: "200px",
+                }}
+              />
+              {state.errors?.description && (
+                <Text c={"red"}>{state.errors.description}</Text>
+              )}
+              <Button.Submit>Create</Button.Submit>
+            </div>
+          )}
         </form>
       </Modal>
       <Box className="text-right mb-4">

@@ -10,9 +10,10 @@ import {
 } from "../validation/schema";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
+import { validateSession } from "../lucia-auth/get-auth";
 
 export async function createIssue(prevState: unknown, formData: FormData) {
-  //await new Promise((resolve) => setTimeout(resolve, 1000));
+  const { user } = await validateSession();
 
   const result = await validation<NewIssueSchema>(
     newIssueSchema,
@@ -47,7 +48,7 @@ export async function createIssue(prevState: unknown, formData: FormData) {
 }
 
 export async function postUpdate(prevState: unknown, formData: FormData) {
-  //await new Promise((resolve) => setTimeout(resolve, 1000));
+  const { user } = await validateSession();
 
   const result = await validation<IssueUpdateSchema>(
     issueUpdateSchema,
@@ -122,10 +123,12 @@ export async function getLatestIssues() {
   }
 }
 
-export async function deleteIssue(
+export async function closeIssue(
   prevState: unknown,
   { issue_id }: { issue_id: number }
 ) {
+  const { user } = await validateSession();
+
   try {
     const res = await prisma.issue.update({
       where: { id: issue_id },
