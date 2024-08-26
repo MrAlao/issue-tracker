@@ -7,7 +7,7 @@ import { IoCheckmarkCircleSharp } from "react-icons/io5";
 import Button from "@/app/components/Button";
 import { useFormState } from "react-dom";
 import { closeIssue } from "@/app/_actions/issue.action";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Issue } from "@prisma/client";

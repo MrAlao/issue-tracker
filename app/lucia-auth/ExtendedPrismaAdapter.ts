@@ -119,9 +119,13 @@ function transformIntoDatabaseSession(raw: SessionSchema): DatabaseSession {
 
 function transformIntoDatabaseUser(raw: UserSchema): DatabaseUser {
   const { id, ...attributes } = raw;
+
   return {
-    id,
-    attributes,
+    id: id.toString(),
+    attributes: {
+      id: Number(id),
+      ...attributes,
+    },
   };
 }
 
@@ -131,8 +135,8 @@ interface PrismaClient {
   $transaction: any;
 }
 
-interface UserSchema extends RegisteredDatabaseUserAttributes {
-  id: UserId;
+export interface UserSchema extends RegisteredDatabaseUserAttributes {
+  id: number;
 }
 
 interface SessionSchema extends RegisteredDatabaseSessionAttributes {

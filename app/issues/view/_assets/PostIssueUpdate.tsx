@@ -4,7 +4,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { Modal, Flex, Box, Text, Card } from "@mantine/core";
 import { useFormState } from "react-dom";
 import { postUpdate } from "@/app/_actions/issue.action";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Issue } from "@prisma/client";

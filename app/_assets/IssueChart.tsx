@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import "@mantine/charts/styles.css";
 import { Card } from "@mantine/core";
 import { BarChart } from "@mantine/charts";

@@ -3,40 +3,42 @@ import { cache } from "react";
 import { lucia } from "./lucia";
 import { Session, User } from "lucia";
 import { redirect } from "next/navigation";
+import { UserSchema } from "./ExtendedPrismaAdapter";
 
-export const getAuth = cache(
-  async (): Promise<{ user: User | null; session: Session | null }> => {
-    const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
-    if (!sessionId) {
-      return {
-        user: null,
-        session: null,
-      };
-    }
-
-    const result = await lucia.validateSession(sessionId);
-
-    try {
-      if (result.session && result.session.fresh) {
-        const sessionCookie = lucia.createSessionCookie(result.session.id);
-        cookies().set(
-          sessionCookie.name,
-          sessionCookie.value,
-          sessionCookie.attributes
-        );
-      }
-      if (!result.session) {
-        const sessionCookie = lucia.createBlankSessionCookie();
-        cookies().set(
-          sessionCookie.name,
-          sessionCookie.value,
-          sessionCookie.attributes
-        );
-      }
-    } catch {}
-    return result;
+export const getAuth = cache(async () => {
+  const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
+  if (!sessionId) {
+    return {
+      user: null,
+      session: null,
+    };
   }
-);
+
+  const result = await lucia.validateSession(sessionId);
+
+  try {
+    if (result.session && result.session.fresh) {
+      const sessionCookie = lucia.createSessionCookie(result.session.id);
+      cookies().set(
+        sessionCookie.name,
+        sessionCookie.value,
+        sessionCookie.attributes
+      );
+    }
+    if (!result.session) {
+      const sessionCookie = lucia.createBlankSessionCookie();
+      cookies().set(
+        sessionCookie.name,
+        sessionCookie.value,
+        sessionCookie.attributes
+      );
+    }
+  } catch {}
+  return {
+    session: result.session,
+    user: result.user as unknown as UserSchema,
+  };
+});
 
 export async function validateSession() {
   const { user, session } = await getAuth();
@@ -45,7 +47,7 @@ export async function validateSession() {
     return redirect(`?redirectPath=${await getPathname()}`);
   }
 
-  return { user: { ...user, id: Number(user.id) }, session };
+  return { user, session };
 }
 
 export async function getPathname() {
@@ -66,4 +68,29 @@ export async function getPathname() {
   }
 
   return pathname; //encodeURIComponent(pathname)
+}
+
+interface Err {
+  error: boolean;
+  errors?: undefined;
+  message: string;
+  data?: undefined;
+}
+
+export function authWrapper<Ctx extends any[], CReturn>(
+  func: (user: UserSchema, ...ctx: Ctx) => Promise<CReturn>
+) {
+  return async (...ctx: Ctx): Promise<CReturn | Err> => {
+    try {
+      const { user } = await getAuth();
+
+      if (!user) {
+        return { error: true, message: "User not authenticated" };
+      }
+
+      return func(user, ...ctx);
+    } catch (error) {
+      return { error: true, message: "User not authenticated" };
+    }
+  };
 }

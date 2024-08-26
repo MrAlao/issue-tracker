@@ -10,74 +10,124 @@ import {
 } from "../validation/schema";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
-import { validateSession } from "../lucia-auth/get-auth";
+import { authWrapper, validateSession } from "../lucia-auth/get-auth";
 
-export async function createIssue(prevState: unknown, formData: FormData) {
-  const { user } = await validateSession();
+// export async function createIssues(prevState: unknown, formData: FormData) {
+//   const { user } = await validateSession();
 
-  const result = await validation<NewIssueSchema>(
-    newIssueSchema,
-    Object.fromEntries(formData)
-  );
+//   const result = await validation<NewIssueSchema>(
+//     newIssueSchema,
+//     Object.fromEntries(formData)
+//   );
 
-  if (result.status !== "success") {
-    return {
-      error: true,
-      errors: result.errors,
-      message: "Correct highlighted fields",
-    };
-  }
+//   if (result.status !== "success") {
+//     return {
+//       error: true,
+//       errors: result.errors,
+//       message: "Correct highlighted fields",
+//     };
+//   }
 
-  try {
-    const newIssue = await prisma.issue.create({
-      data: {
-        title: result.formData.title,
-        data: { create: { description: result.formData.description } },
-      },
-    });
+//   try {
+//     const newIssue = await prisma.issue.create({
+//       data: {
+//         user_id: user.id,
+//         title: result.formData.title,
+//         data: {
+//           create: {
+//             user_id: user.id,
+//             description: result.formData.description,
+//           },
+//         },
+//       },
+//     });
 
-    if (newIssue.id) {
-      revalidatePath("/issues");
-      return { error: false, message: "Issue created", data: newIssue };
-    } else {
-      return { error: true, message: "Unknown error occured" };
+//     if (newIssue.id) {
+//       revalidatePath("/issues");
+//       return { error: false, message: "Issue created", data: newIssue };
+//     } else {
+//       return { error: true, message: "Unknown error occured" };
+//     }
+//   } catch (error) {
+//     return { error: true, message: "Something went wrong" };
+//   }
+// }
+
+export const createIssue = authWrapper(
+  async (user, prevState: unknown, formData: FormData) => {
+    const result = await validation<NewIssueSchema>(
+      newIssueSchema,
+      Object.fromEntries(formData)
+    );
+
+    if (result.status !== "success") {
+      return {
+        error: true,
+        errors: result.errors,
+        message: "Correct highlighted fields",
+      };
     }
-  } catch (error) {
-    return { error: true, message: "Something went wrong" };
-  }
-}
 
-export async function postUpdate(prevState: unknown, formData: FormData) {
-  const { user } = await validateSession();
+    try {
+      const newIssue = await prisma.issue.create({
+        data: {
+          user_id: user.id,
+          title: result.formData.title,
+          data: {
+            create: {
+              user_id: user.id,
+              description: result.formData.description,
+            },
+          },
+        },
+      });
 
-  const result = await validation<IssueUpdateSchema>(
-    issueUpdateSchema,
-    Object.fromEntries(formData)
-  );
-
-  if (result.status !== "success") {
-    return {
-      error: true,
-      errors: result.errors,
-      message: "Correct highlighted fields",
-    };
-  }
-
-  try {
-    const newUpdate = await prisma.issueUpdate.create({
-      data: result.formData,
-    });
-
-    if (newUpdate.id) {
-      revalidatePath("/issues");
-      return { error: false, message: "Issue update posted", data: newUpdate };
-    } else {
-      return { error: true, message: "Unknown error occured" };
+      if (newIssue.id) {
+        revalidatePath("/issues");
+        return { error: false, message: "Issue created", data: newIssue };
+      } else {
+        return { error: true, message: "Unknown error occured" };
+      }
+    } catch (error) {
+      return { error: true, message: "Something went wrong" };
     }
-  } catch (error) {
-    return { error: true, message: "Something went wrong" };
   }
-}
+);
+export const postUpdate = authWrapper(
+  async (user, prevState: unknown, formData: FormData) => {
+    const result = await validation<IssueUpdateSchema>(
+      issueUpdateSchema,
+      Object.fromEntries(formData)
+    );
+
+    if (result.status !== "success") {
+      return {
+        error: true,
+        errors: result.errors,
+        message: "Correct highlighted fields",
+      };
+    }
+
+    try {
+      const newUpdate = await prisma.issueUpdate.create({
+        data: { user_id: user.id, ...result.formData },
+      });
+
+      if (newUpdate.id) {
+        revalidatePath("/issues");
+        return {
+          error: false,
+          message: "Issue update posted",
+          data: newUpdate,
+        };
+      } else {
+        return { error: true, message: "Unknown error occured" };
+      }
+    } catch (error) {
+      return { error: true, message: "Something went wrong" };
+    }
+  }
+);
 
 export async function getIssues(opt?: { status?: string; issue_id?: string }) {
   let where: any = {};
@@ -123,34 +173,31 @@ export async function getLatestIssues() {
   }
 }
 
-export async function closeIssue(
-  prevState: unknown,
-  { issue_id }: { issue_id: number }
-) {
-  const { user } = await validateSession();
+export const closeIssue = authWrapper(
+  async (user, prevState: unknown, { issue_id }: { issue_id: number }) => {
+    try {
+      const res = await prisma.issue.update({
+        where: { id: issue_id },
+        data: {
+          status: "CLOSED",
+        },
+      });
 
-  try {
-    const res = await prisma.issue.update({
-      where: { id: issue_id },
-      data: {
-        status: "CLOSED",
-      },
-    });
-
-    if (res.id) {
+      if (res.id) {
+        return {
+          error: false,
+          message: "Issue status changed",
+        };
+      }
       return {
-        error: false,
-        message: "Issue status changed",
+        error: true,
+        message: "Sorry, but you can't change the issue status at the moment",
+      };
+    } catch (error) {
+      return {
+        error: true,
+        message: "Something went wrong",
       };
     }
-    return {
-      error: true,
-      message: "Sorry, but you can't change the issue status at the moment",
-    };
-  } catch (error) {
-    return {
-      error: true,
-      message: "Something went wrong",
-    };
   }
-}
+);

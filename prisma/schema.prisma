@@ -15,9 +15,9 @@ datasource db {
 
 model Issue {
   id        Int      @id @default(autoincrement())
+  user_id   Int
   issue_id  String   @default(uuid())
   title     String   @db.VarChar(255)
-  //description String   @db.Text
   status    Status   @default(OPEN)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -33,6 +33,7 @@ enum Status {
 
 model IssueUpdate {
   id          Int      @id @default(autoincrement())
+  user_id     Int
   issue_id    Int
   description String   @db.Text
   createdAt   DateTime @default(now())

@@ -1,3 +1,4 @@
+import React from "react";
 import { Metadata } from "next/types";
 import LatestIssues from "./_assets/LatestIssues";
 import { getIssues, getLatestIssues } from "./_actions/issue.action";

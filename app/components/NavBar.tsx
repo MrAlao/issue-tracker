@@ -8,7 +8,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { Rajdhani as Font } from "next/font/google";
 import { Avatar, Box, Flex, Menu, Skeleton, Text } from "@mantine/core";
 import { useAuth } from "../context/Auth.context";
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, googleLogout } from "@react-oauth/google";
 import { toast } from "react-toastify";
 import { registerSession } from "../_actions/user.action";
 import { HiOutlineLogout } from "react-icons/hi";
@@ -84,6 +84,7 @@ function AuthInfo() {
         onError={() => {
           toast.error("Login Failed");
         }}
+        useOneTap
       />
     );
   }
@@ -113,6 +114,7 @@ function AuthInfo() {
           color="red"
           leftSection={<HiOutlineLogout />}
           onClick={() => {
+            googleLogout();
             logOut();
             window.location.reload();
           }}
